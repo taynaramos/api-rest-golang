@@ -16,7 +16,9 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func TodasPersonalidades(w http.ResponseWriter, r *http.Request) {
+	// lista de personalidades
 	var p []models.Personalidade
+	// usando o Find do GORM para encontrar todas essas listas de personalidades passando o endereço de memória de p
 	database.DB.Find(&p)
 	json.NewEncoder(w).Encode(p)
 }
@@ -30,5 +32,37 @@ func RetornaUmaPersonalidade(w http.ResponseWriter, r *http.Request) {
 	var personalidade models.Personalidade
 
 	database.DB.First(&personalidade, id)
+	json.NewEncoder(w).Encode(personalidade)
+}
+
+func CriaUmaNovaPersonalidade(w http.ResponseWriter, r *http.Request) {
+	var novaPersonalidade models.Personalidade
+	// pegando dado do request
+	json.NewDecoder(r.Body).Decode(&novaPersonalidade)
+	// colocando na base de dados
+	database.DB.Create(&novaPersonalidade)
+	// exibindo o que foi criado
+	json.NewEncoder(w).Encode(novaPersonalidade)
+}
+
+func DeletaUmaPersonalidade(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var personalidade models.Personalidade
+	database.DB.Delete(&personalidade, id)
+	// exibindo a personalidade que foi deletada
+	json.NewEncoder(w).Encode(personalidade)
+}
+
+func EditaUmaPersonalidade(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var personalidade models.Personalidade
+	database.DB.First(&personalidade, id)          // acha a personalidade que deve ser alterada
+	json.NewDecoder(r.Body).Decode(&personalidade) // pega o body do request
+	database.DB.Save(&personalidade)               // pede pro database salvar no endereço de memória de personalidade
+
 	json.NewEncoder(w).Encode(personalidade)
 }
