@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/taynaramos/api-rest-golang/controllers"
 	"github.com/taynaramos/api-rest-golang/middleware"
@@ -20,5 +21,5 @@ func HandleRequest() {
 	r.HandleFunc("/api/personalidades", controllers.CriaUmaNovaPersonalidade).Methods("POST")
 	r.HandleFunc("/api/personalidades/{id}", controllers.DeletaUmaPersonalidade).Methods("DELETE")
 	r.HandleFunc("/api/personalidades/{id}", controllers.EditaUmaPersonalidade).Methods("PUT")
-	log.Fatal(http.ListenAndServe(":8000", r)) // quando der algo errado mostrar log e ouvir e subir na porta 8000
+	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(handlers.AllowedOrigins([]string{"*"}))(r))) // quando der algo errado mostrar log e ouvir e subir na porta 8000
 }
