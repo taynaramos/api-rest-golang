@@ -16,6 +16,9 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func TodasPersonalidades(w http.ResponseWriter, r *http.Request) {
+	// para adicionar config no header da requisição e devolver um json
+	// w.Header().Set("Content-type", "application/json")
+
 	// lista de personalidades
 	var p []models.Personalidade
 	// usando o Find do GORM para encontrar todas essas listas de personalidades passando o endereço de memória de p

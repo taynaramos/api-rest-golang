@@ -6,11 +6,14 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/taynaramos/api-rest-golang/controllers"
+	"github.com/taynaramos/api-rest-golang/middleware"
 )
 
 // criando rota para a função home
 func HandleRequest() {
 	r := mux.NewRouter()
+	r.Use(middleware.ContentTypeMiddleware) // aplicando um middleware
+
 	r.HandleFunc("/", controllers.Home)
 	r.HandleFunc("/api/personalidades", controllers.TodasPersonalidades).Methods("GET") // por padrão o método é GET
 	r.HandleFunc("/api/personalidades/{id}", controllers.RetornaUmaPersonalidade).Methods("GET")
